@@ -1,0 +1,46 @@
+from collections import deque
+
+n, m = map(int, input().split())
+
+g = [[] for _ in range(n)]
+
+for _ in range(m):
+    i, j, s = input().split()
+    i = int(i) - 1
+    j = int(j) - 1
+
+    if s == "same":
+        t = 0
+    else:
+        t = 1
+
+    g[i].append((j, t))
+    g[j].append((i, t))
+
+color = [-1] * n
+
+ok = True
+
+for start in range(n):
+    if color[start] == -1:
+        color[start] = 0
+        q = deque([start])
+
+        while q and ok:
+            v = q.popleft()
+
+            for to, t in g[v]:
+                need = color[v] ^ t
+
+                if color[to] == -1:
+                    color[to] = need
+                    q.append(to)
+                else:
+                    if color[to] != need:
+                        ok = False
+                        break
+
+if ok:
+    print("YES")
+else:
+    print("NO")
