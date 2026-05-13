@@ -1,0 +1,25 @@
+from itertools import permutations
+
+r = [0.8, 0.95, 0.7, 0.9]
+
+best_order = None
+best_profit = -1
+
+for order in permutations(range(len(r))):
+
+    total = 0
+
+    for t in range(len(order)):
+        item = order[t]
+        total += 100 * (r[item] ** t)
+
+    if total > best_profit:
+        best_profit = total
+        best_order = order
+
+print("Лучший порядок продажи:")
+
+for x in best_order:
+    print(x + 1, end=" ")
+
+print("\nМаксимальная прибыль:", best_profit)
