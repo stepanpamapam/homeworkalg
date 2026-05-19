@@ -1,0 +1,32 @@
+def max_profit(prices):
+    min_price = prices[0]
+    min_day = 0
+
+    best_profit = 0
+    buy_day = -1
+    sell_day = -1
+
+    for i in range(1, len(prices)):
+        profit = prices[i] - min_price
+
+        if profit > best_profit:
+            best_profit = profit
+            buy_day = min_day
+            sell_day = i
+
+        if prices[i] < min_price:
+            min_price = prices[i]
+            min_day = i
+
+    if best_profit <= 0:
+        print("Получить прибыль невозможно.")
+    else:
+        print(f"Покупать в день {buy_day + 1}")
+        print(f"Продавать в день {sell_day + 1}")
+        print(f"Максимальная прибыль: {best_profit}")
+
+
+if __name__ == "__main__":
+    prices = [9, 1, 5]
+
+    max_profit(prices)
