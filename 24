@@ -1,0 +1,71 @@
+def find_path(tree, current, target, visited, path):
+    visited.add(current)
+
+    if current == target:
+        return path
+
+    for neighbor, weight in tree[current]:
+        if neighbor not in visited:
+            new_path = path + [(current, neighbor, weight)]
+
+            result = find_path(tree, neighbor, target, visited, new_path)
+
+            if result is not None:
+                return result
+
+    return None
+
+
+def check_and_update_mst(tree, u, v, new_weight):
+    print(f"\nПытаемся добавить ребро между {u} и {v} с весом {new_weight}")
+
+    path = find_path(tree, u, v, set(), [])
+
+    if path is None:
+        print("Ошибка: Вершины не связаны!")
+        return tree
+
+    max_edge = None
+    max_weight = -1
+
+    for edge_u, edge_v, weight in path:
+        if weight > max_weight:
+            max_weight = weight
+            max_edge = (edge_u, edge_v, weight)
+
+    print(f"Самое тяжелое ребро: {max_edge[0]}-{max_edge[1]} (вес {max_weight})")
+
+    if new_weight < max_weight:
+        print("Новое ребро дешевле. Обновляем дерево.")
+
+        tree[max_edge[0]].remove((max_edge[1], max_weight))
+        tree[max_edge[1]].remove((max_edge[0], max_weight))
+
+        tree[u].append((v, new_weight))
+        tree[v].append((u, new_weight))
+
+    else:
+        print("Дерево остается минимальным.")
+
+    return tree
+
+
+if __name__ == "__main__":
+    mst_tree = {
+        'v': [('a', 2)],
+        'a': [('v', 2), ('b', 8)],
+        'b': [('a', 8), ('w', 1)],
+        'w': [('b', 1)]
+    }
+
+    print("Исходное дерево:")
+    for node, edges in mst_tree.items():
+        print(f"{node}: {edges}")
+
+    mst_tree = check_and_update_mst(mst_tree, 'v', 'w', 10)
+
+    mst_tree = check_and_update_mst(mst_tree, 'v', 'w', 4)
+
+    print("\nИтоговое дерево:")
+    for node, edges in mst_tree.items():
+        print(f"{node}: {edges}")
